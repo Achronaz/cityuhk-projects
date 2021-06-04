@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title><%= title %></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+  <link rel="stylesheet" href="/stylesheets/APlayer.min.css">
+  <link rel="stylesheet" href="/fontawesome/css/all.min.css">
+  <style>
+    .navbar {box-shadow: 0 0 2px 0 rgba(0, 0, 0, .07), 0 0 2px 0 rgba(0, 0, 0, .1);}
+    .input-group>.form-control {width: auto;}
+    a.list-group-item {
+      color: #555;
+      text-decoration: none;
+    }
+    .list-group.list-group-root>.list-group>.list-group-item {padding-left: 45px;}
+    .list-group.list-group-root>.list-group>.list-group>.list-group-item {padding-left: 45px;}
+    .list-group-item .fas {margin-right: 5px;}
+    .list-group-item:hover{
+      background: #fbfbfb;
+      cursor: pointer;
+    }
+    .myAlert-bottom{
+        position: fixed;
+        bottom: 5px;
+        left:2%;
+        width: auto;
+    }
+    .carousel-item{
+      background: #2f2f2f;
+      text-align: center;
+    }
+    .carousel-item img {
+      max-height: 350px;
+      min-height: 350px;
+    }
+    .card a {
+      color:rgba(0,0,0,.9);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="row no-gutters">
+      <div class="col">
+        <%- include('components/navbar'); %>
+      </div>
+    </div>
+    <div class="row no-gutters" style="padding: 0 0 76px 0;">
+      <div class="col">
+        <% if(page === 'page_home') { %>
+        <%- include('page_home'); %>
+        <% } else if (page === 'page_manage') { %>
+        <%- include('page_manage'); %>
+        <% } else if (page === 'page_error') { %>
+        <%- include('page_error'); %>
+        <% } else if (page === 'page_history') { %>
+        <%- include('page_history'); %>
+        <% } else if (page === 'page_search') { %>
+        <%- include('page_search'); %>
+        <% } else if (page === 'page_statistic') { %>
+        <%- include('page_statistic'); %>
+        <% } %>
+      </div>
+      
+    </div>
+    <div class="container fixed-bottom">
+      <div id="aplayer"></div>
+    </div>
+
+    <% if(user === undefined) { %><%- include('components/modal_sign'); %><% } %>
+    <script src="/javascripts/jquery-3.3.1.min.js"></script>
+    <script src="/javascripts/bootstrap.bundle.min.js"></script>
+    <script src="/javascripts/APlayer.min.js"></script>
+    <script src="/javascripts/bundle.js"></script>
+
+</body>
+
+</html>

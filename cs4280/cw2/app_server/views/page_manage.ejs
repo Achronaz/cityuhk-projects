@@ -1,0 +1,28 @@
+<br>
+<div class="row">
+    <div class="col-lg-8">
+        <input type="text" class="form-control" id="form_search_artist_name" placeholder="artist name ...">
+    </div>
+    <div class="col-lg-2">
+        <input type="button" class="form-control" value="Search" onclick="manage_search_artist()" />
+    </div>
+    <div class="col-lg-2">
+        <button class="btn btn-link" data-target="#modal_create_artist" data-toggle="modal"><i
+                class="fas fa-plus"></i> New Artist</button>
+    </div>
+</div>
+<br>
+<div class="just-padding">
+    <div id="manage_artist_search_list" class="list-group list-group-root well">
+        search artist by name ...
+    </div>
+</div>
+
+<%- include('components/modal_create_artist'); %>
+<%- include('components/modal_edit_artist'); %>
+
+<%- include('components/modal_create_album'); %>
+<%- include('components/modal_edit_album'); %>
+
+<%- include('components/modal_create_song'); %>
+<%- include('components/modal_edit_song'); %>

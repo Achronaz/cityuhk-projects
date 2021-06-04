@@ -1,0 +1,54 @@
+<div class="modal fade" id="modal_edit_song">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4>Edit Song(<span id="edit_song_for"></span>):</h4>
+                    <input type="hidden" id="mange_edit_song_artistid">
+                    <input type="hidden" id="mange_edit_song_artistname">
+                    <form id="manage_edit_song_form">
+                        <input type="hidden" id="manage_edit_song_songid" name="songid">
+                        <div class="row">
+                            <div class="col">
+                                <label>Song Title:</label>
+                                <input class="form-control" type="text" name="songtitle" id="manage_edit_song_songtitle">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label>Price($):</label>
+                                <input class="form-control" type="number" name="price" id="manage_edit_song_price">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label>Song:</label>
+                                <div class="form-group custom-file">
+                                    <label class="custom-file-label" for="form_edit_song_file"
+                                        id="form_edit_song_file_label">choose
+                                        mp3 or m4a</label>
+                                    <input type="file" class="custom-file-input" id="form_edit_song_file"
+                                        accept="audio/*" name="audio">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 20px;">
+                            <div class="col-lg-4 offset-lg-8">
+                                <input class="form-control" type="submit" value="Edit">
+                            </div>
+                        </div>
+                        <input type="hidden" id="mange_edit_song_albumid" name="albumid">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('form_edit_song_file').addEventListener('change', function (event) {
+            document.getElementById('form_edit_song_file_label').innerHTML = event.target.value.split('\\')
+                .pop();
+        });
+        document.getElementById('manage_edit_song_form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            manage_edit_song(new FormData(event.target));
+        });
+    </script>

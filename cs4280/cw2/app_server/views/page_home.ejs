@@ -1,0 +1,67 @@
+<div class="row">
+    <div class="col">
+        <div class="bd-example">
+            <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <% collapse.forEach((item,index)=>{ %>
+                        <% if(index === 0){ %>
+                        <li data-target="#carouselExampleCaptions" data-slide-to="<%=index%>" class="active"></li>
+                        <% } else { %>
+                        <li data-target="#carouselExampleCaptions" data-slide-to="<%=index%>" class=""></li>
+                        <% } %>
+                    <% }); %>
+                </ol>
+                <div class="carousel-inner">
+                    <% collapse.forEach((item,index)=>{ %>
+                    
+                        <% if(index === 0){ %>
+                        <div class="carousel-item active">
+                        <% } else { %>
+                        <div class="carousel-item">
+                        <% } %>
+                            <a href="/search/album/<%=item.albumtitle%>">
+                                <img src="/source/album_cover/<%=item.coverpath%>">
+                            </a>
+                            <div class="carousel-caption d-none d-md-block"></div>
+                        </div>
+                    
+                <% }); %>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+</div>
+</div>
+Trending:
+<div class="d-flex flex-row">
+    <% trending.forEach((item,index)=>{ %>
+    <div class="card" style="width: 18rem;">
+        <a href="/search/album/<%=item.albumtitle%>">
+            <img src="/source/album_cover/<%=item.coverpath%>" class="card-img-top">
+            <span style="padding: 0 10px;"><%=item.albumtitle%>(<%=item.genre%>)</span>
+        </a>
+    </div>
+    <% }); %>
+</div>
+Recommended:
+<div class="d-flex flex-row">
+    <% recommended.forEach((item,index)=>{ %>
+    <div class="card" style="width: 18rem;">
+        <a href="/search/album/<%=item.albumtitle%>">
+            <img src="/source/album_cover/<%=item.coverpath%>" class="card-img-top">
+            <span style="padding: 0 10px;"><%=item.albumtitle%>(<%=item.genre%>)</span>
+        </a>
+    </div>
+    <% }); %>
+</div>
+
+<div style="display: flex;">
+
+</div>

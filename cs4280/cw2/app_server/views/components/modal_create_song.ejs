@@ -1,0 +1,53 @@
+<div class="modal fade" id="modal_create_song">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4>Create Song(<span id="create_song_for"></span>):</h4>
+                <input type="hidden" id="manage_create_song_artistid">
+                <input type="hidden" id="manage_create_song_artistname">
+                <form id="manage_create_song_form">
+                    <div class="row">
+                        <div class="col">
+                            <label>Song Title:</label>
+                            <input class="form-control" type="text" name="songtitle">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>Price($):</label>
+                            <input class="form-control" type="number" name="price">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>Song:</label>
+                            <div class="form-group custom-file">
+                                <label class="custom-file-label" for="form_create_song_file"
+                                    id="form_create_song_file_label">choose
+                                    mp3 or m4a</label>
+                                <input type="file" class="custom-file-input" id="form_create_song_file"
+                                    accept="audio/*" name="audio">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 20px;">
+                        <div class="col-lg-4 offset-lg-8">
+                            <input class="form-control" type="submit" value="Create">
+                        </div>
+                    </div>
+                    <input type="hidden" id="manage_create_song_albumid" name="albumid">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('form_create_song_file').addEventListener('change', function (event) {
+        document.getElementById('form_create_song_file_label').innerHTML = event.target.value.split('\\')
+            .pop();
+    });
+    document.getElementById('manage_create_song_form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        manage_create_song(new FormData(event.target));
+    });
+</script>

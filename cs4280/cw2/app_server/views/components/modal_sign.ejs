@@ -1,0 +1,46 @@
+<div class="modal fade" id="modal_sign" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <ul class="nav nav-tabs nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" data-target="#modal_sign_tab_signin" href="#">Signin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" data-target="#modal_sign_tab_signup" href="#">Signup</a>
+                </li>
+            </ul>
+            <div class="tab-content modal-body">
+                <div id="modal_sign_tab_signin" class="tab-pane fade in active show">
+                    <!--<form id="form_signin" method="POST" action="/user/signin"> -->
+                        <div class="form-group">
+                            <label for="signin_username">Username</label>
+                            <input type="text" class="form-control" id="signin_username" placeholder="username" name="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="signin_password">Password</label>
+                            <input type="password" class="form-control" id="signin_password" placeholder="password" name="password">
+                        </div>
+                        <button class="btn btn-primary" onclick="signin()">Signin</button>
+                    <!--</form>-->
+                </div>
+                <div id="modal_sign_tab_signup" class="tab-pane fade">
+                    <!--<form id="form_signup" method="POST" action="/user/signup">-->
+                        <div class="form-group">
+                            <label for="signup_username">Username</label>
+                            <input type="text" class="form-control" id="signup_username" placeholder="username" name="username">
+                        </div>
+                        <div class="form-group">
+                            <label for="signup_password">Password</label>
+                            <input type="password" class="form-control" id="signup_password" placeholder="password" name="password">
+                        </div>
+                        <div class="form-group">
+                            <label for="signup_repeat_password">Repeat password</label>
+                            <input type="password" class="form-control" id="signup_repeat_password" placeholder="repeat password" name="repeatpassword">
+                        </div>
+                        <button class="btn btn-primary" onclick="signup()">Signup</button>
+                    <!--</form>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

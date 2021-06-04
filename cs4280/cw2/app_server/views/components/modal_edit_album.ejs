@@ -1,0 +1,54 @@
+<div class="modal fade" id="modal_edit_album">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h4>Edit Album(<span id="edit_album_for"></span>):</h4>
+                    <input type="hidden" id="manage_edit_album_artistname" value="">
+                    <input type="hidden" id="manage_edit_album_artistid" value="">
+                    <form id="manage_edit_album_form">
+                        <input type="hidden" id="manage_edit_album_albumid" name="albumid">
+                        <div class="row">
+                            <div class="col">
+                                <label>Album Title:</label>
+                                <input type="text" class="form-control" name="albumtitle" id="form_edit_album_albumtitle">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label>Genre:</label>
+                                <input type="text" class="form-control" name="genre" id="form_edit_album_genre">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <label>Album Cover:</label>
+                                <div class="form-group custom-file">
+                                    <label class="custom-file-label" for="form_edit_album_file"
+                                        id="form_edit_album_file_label">choose
+                                        jpg or png</label>
+                                    <input type="file" class="custom-file-input" id="form_edit_album_file"
+                                        accept="image/*" name="image">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 offset-lg-8">
+                                <label>&nbsp;</label>
+                                <input type="submit" class="form-control" value="Edit">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('form_edit_album_file').addEventListener('change', function (event) {
+            document.getElementById('form_edit_album_file_label').innerHTML = event.target.value.split('\\')
+                .pop();
+        });
+        document.getElementById('manage_edit_album_form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            manage_edit_album(new FormData(event.target));
+        });
+    </script>

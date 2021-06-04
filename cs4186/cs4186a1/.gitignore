@@ -1,0 +1,5 @@
+*.jpg
+*.txt
+*.png
+.ipynb_checkpoints
+./ug_data/*

@@ -1,0 +1,53 @@
+<div class="modal fade" id="modal_create_album">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4>Create Album(<span id="create_album_for"></span>):</h4>
+                <input type="hidden" id="manage_create_album_artistname" value="">
+                <form id="manage_create_album_form">
+                    <input type="hidden" id="manage_create_album_artistid" value="" name="artistid">
+                    <div class="row">
+                        <div class="col">
+                            <label>Album Title:</label>
+                            <input type="text" class="form-control" name="albumtitle">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>Genre:</label>
+                            <input type="text" class="form-control" name="genre">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>Album Cover:</label>
+                            <div class="form-group custom-file">
+                                <label class="custom-file-label" for="form_create_album_file"
+                                    id="form_create_album_file_label">choose
+                                    jpg or png</label>
+                                <input type="file" class="custom-file-input" id="form_create_album_file"
+                                    accept="image/*" name="image">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 offset-lg-8">
+                            <label>&nbsp;</label>
+                            <input type="submit" class="form-control" value="Create">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('form_create_album_file').addEventListener('change', function (event) {
+        document.getElementById('form_create_album_file_label').innerHTML = event.target.value.split('\\')
+            .pop();
+    });
+    document.getElementById('manage_create_album_form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        manage_create_album(new FormData(event.target));
+    });
+</script>

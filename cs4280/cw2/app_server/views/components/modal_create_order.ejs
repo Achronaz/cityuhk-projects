@@ -1,0 +1,41 @@
+<div class="modal fade" id="modal_create_order">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <h4>Order for <span id="create_order_for"></span></h4>
+            <input type="hidden" id="order_songid">
+            <input type="hidden" id="order_albumid">
+            <input type="hidden" id="order_option">
+            <ul class="nav nav-tabs nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" data-target="#modal_create_order_points"
+                        href="#">Points</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" data-target="#modal_create_order_credit" href="#">Credit
+                        Card</a>
+                </li>
+            </ul>
+            <div class="tab-content modal-body">
+                <div id="modal_create_order_points" class="tab-pane fade in active show">
+                    <% if(user !== undefined){ %>Ponits: <%=user.loyaltypoints %><% } %>
+                    <input onclick="user_create_order(2)" type="button" value="Order" class="form-control">
+                </div>
+                <div id="modal_create_order_credit" class="tab-pane fade">
+                    Card Number:
+                    <input type="text" placeholder="card number" class="form-control">
+                    Name on Card:
+                    <input type="text" placeholder="name on card" class="form-control">
+                    Expiry date:
+                    <input type="month" class="form-control">
+                    Security Code:
+                    <input type="number" class="form-control">
+                    <br>
+                    <input onclick="user_create_order(1)" type="button" value="Order" class="form-control">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    
+</script>

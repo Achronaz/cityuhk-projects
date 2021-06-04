@@ -1,0 +1,73 @@
+<h5 style="margin-top:10px;">Search results for <%=searchOption%> "<%=searchKey%>".</h5>
+<ul class="list-group">
+    <% artists.forEach(function(artist){ %>
+    <li class="list-group-item">
+        <img src="/source/artist_icon/<%=artist.iconpath%>" width="30"> <%=artist.artistname.replace("\\","");%>
+        <ul class="list-group list-group-flush">
+            <% artist.albums.forEach(function(album){
+            var albumPrice = 0;
+            album.songs.forEach(s=>{albumPrice += s.price;});
+            var albumPurchased = false;
+            for(var i=0; i < purchased.length; i++) {
+                if(purchased[i].albumid == album.albumid && purchased[i].refund == 0){
+                    albumPurchased = true;
+                    break;
+                }
+            }
+        %>
+            <li class="list-group-item">
+                <img src="/source/album_cover/<%=album.coverpath%>" width="30">
+                <i class="fas fa-compact-disc">  </i><%=album.albumtitle.replace("\\","");%>
+                (<%=album.genre.replace("\\","");%>)
+                <% if(albumPurchased) { %>
+                    <button class="btn btn-link btn-sm"
+                    onclick="new_order('<%=album.albumtitle%>','album','<%=album.albumid%>')"
+                    data-target="#modal_create_order" data-toggle="modal" disabled>buy</button>
+                <% } else { %>
+                    <button class="btn btn-link btn-sm"
+                    onclick="new_order('<%=album.albumtitle%>','album','<%=album.albumid%>')"
+                    data-target="#modal_create_order" data-toggle="modal">buy</button>
+                <% } %>
+                <span class="badge badge-light">$<%=albumPrice%></span>
+                <ul class="list-group list-group-flush">
+                    <% album.songs.forEach(function(song){ %>
+                    <li class="list-group-item">
+                        <i class="fas fa-music">  </i><%=song.songtitle.replace("\\","");%>
+                        <button class="btn btn-link btn-sm"
+                            onclick="playSong('<%=song.songtitle%>','<%=artist.artistname%>','/source/complete/<%=song.filepath%>?albumid=<%=album.albumid%>&songid=<%=song.songid%>','/source/album_cover/<%=album.coverpath%>')">Play</button>
+                        <% if(user !== undefined){
+                            var isAdmin = user.permission === 1; 
+                            var songPurchased = false;
+                            for(var i=0; i < purchased.length; i++) {
+                                    if(purchased[i].songid == song.songid && purchased[i].refund == 0){
+                                        songPurchased = true;
+                                        break;
+                                    }
+                                } 
+                            }
+                        %>
+                        
+                        <% if(songPurchased || albumPurchased || isAdmin) {%>
+                            <button class="btn btn-link btn-sm" disabled
+                                onclick="new_order('<%=song.songtitle%>','song','<%=song.songid%>')"
+                                data-target="#modal_create_order" data-toggle="modal">buy</button>
+                        <span class="badge badge-light">$<%=song.price%></span>
+                            <a class="btn btn-link btn-sm" href="/source/complete/<%=song.filepath%>"
+                                download="<%=song.songtitle %>">Download</a>
+                        <% } else { %>
+                            <button class="btn btn-link btn-sm"
+                                onclick="new_order('<%=song.songtitle%>','song','<%=song.songid%>')"
+                                data-target="#modal_create_order" data-toggle="modal">buy</button>
+                        <span class="badge badge-light">$<%=song.price%></span>
+                        <% } %>
+                    </li>
+                    <% }); %>
+                </ul>
+                
+            </li>
+            <% }); %>
+        </ul>
+    </li>
+    <% }); %>
+</ul>
+<%- include('components/modal_create_order'); %>

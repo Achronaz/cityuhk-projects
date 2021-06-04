@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title></title>
+    <style>
+        #puzzle_container *{
+          position:absolute;
+        }
+        #puzzle_container {
+            width: 680px;
+            height: 450px;
+            position: absolute;
+            left: 20px;
+            top: 10px;
+            z-index: 10;
+            background-color: white;
+            display: none;
+            border: outset; 
+        }
+        #pattern-label {
+            top: 40px;          
+            left: 50px;          
+        }
+        #pattern {
+            top: 60px;          
+            left: 50px;          
+            width: 100px;
+            height: 100px;
+            background-image: url('pattern.png');
+            background-size: 100px 100px;
+        }
+        #location-label {
+            top: 190px;          
+            left: 50px;          
+        }
+        #location {
+            top: 210px;          
+            left: 50px;          
+            width: 100px;
+            height: 100px;
+            background-image: url('location.png');
+            background-size: 100px 100px;
+        }
+        #feedback {
+            top: 150px;          
+            left: 530px;          
+            width: 80px;
+            height: 80px;
+            background-image: url('right.png');
+            background-size: 80px 80px;
+            display: none;
+        }
+        #button-start {
+            position: absolute;
+            top: 365px;
+            width: 160px;
+            height: 50px;
+            left: 20px;
+        }
+        #button-restart {
+            position: absolute;
+            top: 365px;
+            width: 160px;
+            height: 50px;
+            left: 200px;
+        }
+        #button-prev {
+            position: absolute;
+            top: 365px;
+            width: 50px;
+            height: 50px;
+            left: 390px;
+        }
+        #button-next {
+            position: absolute;
+            top: 365px;
+            width: 50px;
+            height: 50px;
+            left: 450px;
+        }
+        #description {
+            position: absolute;
+            top: 500px;
+        }
+        .highlight {
+            color: red;
+        }
+    </style>
+    <script>
+        var neighbor;
+        var image_index=[];
+        var image_index_start=[];
+        var move_list=[];
+        var status_list=[];
+        var input_seq=[];
+        var isGameover;
+        var num_trial;
+        var move_pointer;
+        var seq_pointer;
+        var myTimeout = 1000/5;
+        function init(){
+            for (k=0, i=0; i<3; i++){
+                for (j=0; j<3; j++, k++){
+                    name = "cell"+k;
+                    item = document.getElementById(name);
+                    image_index[k]=k;
+                    if (k>0) {
+                        item.style.backgroundImage = "url('step"+(k)+".png')";
+                        item.style.backgroundSize = "100px 100px";
+                    }
+                    else {
+                        item.style.backgroundImage = "";                      
+                    }
+                }
+            }
+            
+            while (checkFinishGame()){
+                var x=Math.pow(10,Math.random()*3);
+                for (j=0; j<x; j++){
+                    k = Math.floor(Math.random()*9);
+                    cellClickedAction(k, 0);
+                }
+            }
+            document.getElementById("feedback").style.display = "none";
+            
+            isGameover = false;
+            num_trial = 0;
+            document.getElementById("button-check").disabled = false;
+            
+            for (k=0; k<9; k++) {
+                image_index_start[k] = image_index[k];
+            }
+            
+            move_list = [];
+            move_pointer = move_list.length;
+            status_list = [];
+            ind = 0;
+            status_list[0] = [0,0,0,0,0,0,0,0,0];
+            for (k=0; k<image_index.length; k++) {
+                status_list[0][k] = image_index[k];
+            }
+            updateInfo(0);
+            EnablePrevButton(false);
+            EnableNextButton(false);
+        }
+        function Puzzle(){
+              isGameover = false;
+              document.getElementById("button-check").disabled = false;
+              document.getElementById("puzzle_container").style.display="block";
+              
+              width = 100;
+              height = width;
+              topValue = 30;
+              for (k=0, i=0; i<3; i++){
+                  left = 200;
+                  for (j=0; j<3; j++, k++){
+                      name = "cell"+k;
+                      item = document.getElementById(name);
+                      item.style.width = width+"px";
+                      item.style.height = height+"px";
+                      item.style.top = topValue+"px";
+                      item.style.left = left+"px";
+                      item.style.border = "solid";
+                      item.style.padding = "0";
+                      item.style.margin = "0";
+                      item.onclick = cellClicked(k);
+                      left += width;
+                  }
+                  topValue += height;
+              }
+              
+              neighbor = [];
+              neighbor[0] = [1,3];
+              neighbor[1] = [0,2,4];
+              neighbor[2] = [1,5];
+              neighbor[3] = [0,4,6];
+              neighbor[4] = [1,3,5,7];
+              neighbor[5] = [2,4,8];
+              neighbor[6] = [3,7];
+              neighbor[7] = [4,6,8];
+              neighbor[8] = [5,7];
+              
+              init();
+        }
+        function cellClickedAction(pos, isRecord){
+            
+            if (isRecord==1) {
+                if (move_pointer != move_list.length) {
+                    for (k=0;k<9; k++) {
+                        image_index[k] = status_list[move_pointer][k];
+                    }
+                    status_list.splice(move_pointer+1,status_list.length-move_pointer-1);
+                    move_list.splice(move_pointer,move_list.length-move_pointer);
+                }
+            }
+            isNeighborEmpty = false;
+            for (i=0; i<neighbor[pos].length; i++){
+                if (image_index[neighbor[pos][i]] == 0){
+                    isNeighborEmpty = true;
+                    neighborind = neighbor[pos][i]; 
+                }
+            }
+            if (isNeighborEmpty){
+                item1 = document.getElementById("cell"+pos);
+                item2 = document.getElementById("cell"+neighborind);
+                tempName = item1.style.backgroundImage;
+                item1.style.backgroundImage = item2.style.backgroundImage;
+                item2.style.backgroundImage = tempName;
+                item2.style.backgroundSize = "100px 100px";
+                
+                tempind = image_index[pos];
+                image_index[pos] = image_index[neighborind];
+                image_index[neighborind] = tempind;
+
+                
+                
+                if (isRecord==1) {                    
+                    move_list.push(String.fromCharCode(65+pos));
+                    ind = status_list.length;
+                    status_list[ind] = [0,0,0,0,0,0,0,0,0];
+                    for (k=0; k<image_index.length; k++) {
+                        status_list[ind][k] = image_index[k];
+                    }
+                    move_pointer = move_list.length;
+                    updateInfo(move_list.length);
+
+                    if (move_pointer >= 0) {
+                        EnablePrevButton(true);
+                    }
+
+                    num_trial++;
+                }
+                return true;
+            }
+            else {
+                return false;
+            }
+            
+        }
+        function prevMove() {
+            if (move_pointer>0) {
+                move_pointer--;
+                updateInfo(move_pointer);
+                if (move_pointer==0) {
+                    EnablePrevButton(false);
+                }
+                if (move_pointer < move_list.length) {
+                    EnableNextButton(true);
+                }
+            }
+        }
+        function nextMove() {
+            if (move_pointer < move_list.length) {
+                move_pointer++;
+                updateInfo(move_pointer);
+                if (move_pointer==move_list.length) {
+                    EnableNextButton(false);
+                }
+                if (move_pointer > 0) {
+                    EnablePrevButton(true);
+                }
+            }
+        }
+        function updateInfo(ind) {
+            document.getElementById("num_move").innerHTML = "Number of Move: "+move_list.length;
+            document.getElementById("puzzle_status").innerHTML = "Puzzle Status: ";
+            for (k=0; k<9; k++) {
+                document.getElementById("puzzle_status").innerHTML += status_list[ind][k];
+            }
+            document.getElementById("move_info").innerHTML = "Move sequence: <br>";
+            for (k=0; k<move_list.length; k++)
+            {
+                if (k+1==ind) {
+                    document.getElementById("move_info").innerHTML += "<span class='highlight'>"+move_list[k]+"</span>";
+                }
+                else
+                    document.getElementById("move_info").innerHTML += move_list[k];
+            }
+            for (k=0, i=0; i<3; i++){
+                for (j=0; j<3; j++, k++){
+                    name = "cell"+k;
+                    item = document.getElementById(name);                    
+                    if (status_list[ind][k]>0) {
+                        item.style.backgroundImage = "url('step"+(status_list[ind][k])+".png')";
+                        item.style.backgroundSize = "100px 100px";
+                    }
+                    else {
+                        item.style.backgroundImage = "";                      
+                    }
+                }
+            }
+            
+        }
+        function restartThisPuzzle(){
+            for (k=0, i=0; i<3; i++){
+                for (j=0; j<3; j++, k++){
+                    name = "cell"+k;
+                    item = document.getElementById(name);
+                    image_index[k]=image_index_start[k];
+                    if (image_index[k]>0) {
+                        item.style.backgroundImage = "url('step"+(image_index[k])+".png')";
+                        item.style.backgroundSize = "100px 100px";
+                    }
+                    else {
+                        item.style.backgroundImage = "";                      
+                    }
+                }
+            }
+                        
+            move_list = [];
+            move_pointer = move_list.length;
+            status_list = [];
+            ind = 0;
+            status_list[0] = [0,0,0,0,0,0,0,0,0];
+            for (k=0; k<image_index.length; k++) {
+                status_list[0][k] = image_index[k];
+            }
+            updateInfo(0);
+            EnablePrevButton(false);
+            EnableNextButton(false);
+            
+            document.getElementById("feedback").style.display = "none";
+            
+            isGameover = false;
+            num_trial = 0;
+            document.getElementById("button-check").disabled = false;
+        }
+        function EnablePrevButton(b) {
+            document.getElementById("button-prev").disabled = !b;
+        }
+        function EnableNextButton(b) {
+            document.getElementById("button-next").disabled = !b;
+        }
+        function checkFinishGame(){
+            isFinish = true;
+            for (i=0; i<9; i++){
+                isFinish &= (image_index[i] == i);
+            }
+            return isFinish;
+        }
+        function cellClicked(pos){
+            return function (){
+                if (isGameover)
+                    return;
+                    
+                cellClickedAction(pos, 1);
+ 
+
+                isFinish = true;
+                for (i=0; i<9; i++){
+                    isFinish &= (image_index[i] == i);
+                }
+                if (checkFinishGame()) {
+                   isGameover = true;
+                   document.getElementById("feedback").style.display = "block";
+                   document.getElementById("button-check").disabled = true;
+                }
+                else
+                   document.getElementById("feedback").style.display = "none";
+                
+            }
+        }
+        function makeSeqMove() {
+            seq_pointer++;
+            if (seq_pointer <= input_seq.length-1) {
+                pos = input_seq.charCodeAt(seq_pointer)-"A".charCodeAt(0);
+                var isGood = cellClickedAction(pos,1);
+                if (isGood) {
+                    isFinish = true;
+                    for (i=0; i<9; i++){
+                        isFinish &= (image_index[i] == i);
+                    }
+                    if (checkFinishGame()) {
+                       isGameover = true;
+                       document.getElementById("feedback").style.display = "block";
+                       document.getElementById("button-check").disabled = true;
+                    }
+                    else
+                    {
+                       document.getElementById("feedback").style.display = "none";
+                       setTimeout(makeSeqMove,myTimeout);
+                    }
+                }
+                else{
+                    document.getElementById("input_feedback").innerHTML = " The input move sequence contains an invalid move "+input_seq[seq_pointer];
+                    if (seq_pointer>0) {
+                        document.getElementById("input_feedback").innerHTML += " after "+input_seq.substring(0, seq_pointer); 
+                    }
+                }
+            }
+        }
+        function checkSeq() {
+            if (!isGameover) {
+                document.getElementById("input_feedback").innerHTML = "";
+                input_seq = document.getElementById("input_text").value.replace(/\s+/g, '').toUpperCase();
+                var isError = false;
+                if (input_seq.length>0) {                            
+                    for (k=0;k<input_seq.length && !isError;k++) {
+                        if (input_seq[k]<'A' || input_seq[k]>'I') {
+                            document.getElementById("input_feedback").innerHTML = " The input move sequence contains invalid character "+input_seq[k];
+                            isError = true;
+                        }
+                    }
+                    if (!isError) {
+                        seq_pointer = -1;
+                        setTimeout(makeSeqMove,myTimeout);
+                    }
+                }
+                else {
+                    document.getElementById("input_feedback").innerHTML = " First input the move sequence in the text box!";
+                }            
+            }
+        }
+    </script>
+</head>
+<body onload="Puzzle();">
+    <div id="puzzle_container">      
+        <div id="pattern-label">Target Pattern:</div>
+        <div id="pattern"></div>
+        <div id="location-label">Location Label:</div>
+        <div id="location"></div>
+        <div id="cell0"></div><div id="cell1"></div><div id="cell2"></div>
+        <div id="cell3"></div><div id="cell4"></div><div id="cell5"></div>
+        <div id="cell6"></div><div id="cell7"></div><div id="cell8"></div>
+        <div id="feedback"></div>
+        <div id="buttons">
+              <button id="button-start" onclick="init()">Start New Puzzle</button>
+              <button id="button-restart" onclick="restartThisPuzzle()">Restart This Puzzle</button>
+              <button id="button-prev" onclick="prevMove()"> < </button>
+              <button id="button-next" onclick="nextMove()"> > </button>
+        </div>
+    </div>
+    <div id="description">
+        <div id="num_move">
+        </div>
+        <br/>
+        <div id="puzzle_status">
+        </div>
+        <br/>
+        <div id="move_info">
+        </div>
+        <br/>
+        Input a move sequence: <br/>
+        <input type="text" id="input_text" name="input_seq" style="width:700px;height:25px;"><br/><br/>
+        <button id="button-check" onclick="checkSeq()">Check Input Sequence</button> <span id="input_feedback"></span>
+    </div>
+</body>
+</html>

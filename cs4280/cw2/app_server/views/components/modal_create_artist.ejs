@@ -1,0 +1,56 @@
+<div class="modal fade" id="modal_create_artist">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4>Create Artist:</h4>
+                <form id="manage_artist_create_form">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="form_create_artist_name">Artist Name:</label>
+                                <input type="text" class="form-control" id="form_create_artist_name"
+                                    placeholder="artist name ..." name="artistname">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label>Icon:</label>
+                            <div class="form-group custom-file" style="margin-bottom: 20px;">
+                                <label class="custom-file-label" for="form_create_artist_file"
+                                    id="form_create_artist_file_label">choose
+                                    jpg or png</label>
+                                <input type="file" class="custom-file-input" id="form_create_artist_file"
+                                    accept="image/*" name="image">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="form_create_artist_desc">Artist Description:</label>
+                                <textarea class="form-control" id="form_create_artist_desc" rows="3"
+                                    name="description"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 offset-lg-8">
+                            <input type="submit" class="form-control" value="Create" />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('form_create_artist_file').addEventListener('change', function (event) {
+        document.getElementById('form_create_artist_file_label').innerHTML = event.target.value.split('\\')
+            .pop();
+    });
+    document.getElementById('manage_artist_create_form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        manage_create_artist(new FormData(event.target));
+    });
+</script>

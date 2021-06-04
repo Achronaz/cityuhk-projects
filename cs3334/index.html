@@ -1,0 +1,157 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<style>
+    tr,
+    td {
+        border: 1px solid black;
+    }
+
+    table.board, table.gboard ,
+    .board tr, .gboard tr,
+    .board td, .gboard td {
+        border: 1px solid black;
+        font-size: 20pt;
+        text-align: center;
+    }
+
+    .board td, .gboard td {
+        width: 40px;
+        height: 40px;
+    }
+
+    .board td:hover {
+        background-color: green;
+        cursor: pointer;
+    }
+
+    .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+        max-height: 500px; 
+        overflow: auto;
+    }
+
+    .flex-container>div {
+        margin: 10px;
+        text-align: center;
+        border: 1px solid black;
+    }
+</style>
+
+<body>
+    <div style="display:flex;">
+        <div>
+            <table>
+                <tr><th>Game Board</th></tr>
+                <tr>
+                    <td>
+                        <table id="grid" class="board">
+                            <tr><td></td><td></td><td></td></tr>
+                            <tr><td></td><td></td><td></td></tr>
+                            <tr><td></td><td></td><td></td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </table> 
+        </div>
+        <div>
+            <table>
+                <tr><th>Goal State</th></tr>
+                <tr>
+                    <td>
+                        <table id="goalGrid" class="gboard">
+                            <tr><td></td><td></td><td></td></tr>
+                            <tr><td></td><td></td><td></td></tr>
+                            <tr><td></td><td></td><td></td></tr>
+                        </table>
+                    </td>
+                </tr>
+            </table> 
+        </div>
+    </div>
+
+<pre>
+<input type="button" value="new 3x3 puzzle" onclick="newBoard(3)"> <input type="button" value="Show Suggested Solution" onclick="drawAnswer()">
+<!--<input type="button" value="new 4x4 puzzle" onclick="newBoard(4)">
+ Time limit:<input type="number" id="looptime" value="" placeholder="default:10000*size^2">
+<strong style="color:red;">getting 4x4 suggested solution may 
+take a long time and exceed the default loop time limit.</strong>-->
+</pre>
+<div id="solution" class="flex-container"></div>
+</body>
+<script src="puzzle.js"></script>
+<script>
+    //main
+    var table = new Board(BSIZE);
+    var answer = []
+    var possibleMoveArr = [];
+
+    function newBoard(size) {
+        BSIZE = size;
+        table = new Board(BSIZE);
+        table.randPermin();
+        table.drawGrid();
+        table.drawUiBoard();
+        possibleMoveArr = possibleMove(BSIZE);
+        document.getElementById('solution').innerHTML = '';
+    }
+
+    function possibleMove(size) {
+        var result = [];
+        var count = 0;
+        for (var y = 0; y < size; y++) {
+            for (var x = 0; x < size; x++) {
+                var move = [];
+                move.push((y === 0) ? -1 : count - size);
+                move.push((x + 1 <= size - 1) ? count + 1 : -1);
+                move.push((y === size - 1) ? -1 : count + size);
+                move.push((x - 1 >= 0) ? count - 1 : -1);
+                result.push(move);
+                count++;
+            }
+        }
+        return result;
+    }
+
+    function move(index) {
+        for (var i = 0; i < possibleMoveArr[index].length; i++) {
+            if (table.board[possibleMoveArr[index][i]] === 0) {//table.uiBoard[possibleMoveArr[index][i]] === table.uiBoard[table.board.indexof(0)]
+                table.swap(possibleMoveArr[index][i], index);
+                table.drawGrid();
+                if (table.isGoal()) alert('This is goal state.');
+                return;
+            }
+        }
+    }
+    var ans;
+
+    function drawAnswer() {
+        setTimeout(function () {
+            //loopTime = parseInt(document.getElementById('looptime').value) || 10000 * BSIZE * BSIZE;
+            answer = [];
+            ans = table.gameTree();
+            let a = ans;
+            var step = []; //complete step of the 8 puzzle
+            while (a.parent != null) {
+                step.unshift(a.uiArr);
+                a = a.parent;
+            }
+            var el = document.getElementById('solution');
+            var temp = '';
+            step.forEach((arr, aidx) => {
+                temp += '<div>step' + (aidx + 1) + '';
+                temp += '<table border="0">';
+                for (var i = 0; i < BSIZE; i++) {
+                    temp += "<tr>"
+                    for (var j = 0; j < BSIZE; j++) {
+                        temp += "<td>" + (arr[i * BSIZE + j] === 0 ? '' : arr[i * BSIZE + j]) + "</td>"
+                    }
+                    temp += '</tr>';
+                }
+                temp += '</table></div>';
+            });
+            el.innerHTML = temp;
+        }, 0);
+    }
+</script>

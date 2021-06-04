@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Design</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <style>
+        span {
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <pre>
+        CS4280 CW2
+        Group:10
+        Members         Contribution
+        TSANG Ka Kuen   100%
+        TAM Tsz Chun    0%
+        TSE Kiu Yu      0%
+        <h2>     Setup</h2>
+        Environment: Windows 10
+        1. MySQL    a. import "4280db_demo.sql" for demo, "4280db_reset.sql" for reset
+                    b. create account "root" with password "123741456852" or using another account by modify "MYSQLUSER" and "MYSQLPWD" in env.js
+                    c. make sure "env.js" is set correctly.
+        2. FFmpeg   a. install FFmpeg(cutting, get metadata and cover picture from audio file) <span >for cutting audio file</span>
+                    b. <a href="https://www.youtube.com/watch?v=pHR3ttH5t-w" target="_blank">windows 10 installation guide</a>, <a href="https://ffmpeg.zeranoe.com/builds/" target="_blank">Download Link</a>
+        3. NPM      a. npm install
+                    b. npm start(MYSQLPORT:3306) / npm test(MYSQLPORT:3307)
+        4. Account  a. Manager:{ ac:"admin01",pw:"123123" }
+                    b. User   :{ ac:"user01",pw:"123123" }
+
+        Since the file size of audio and image is large, I will not submit those file. 
+        Instead, I will upload to Google Cloud, you can access <a href="https://bit.ly/2GpYgv5">sources file</a> to download
+        and replace "source" folder in the root for the demo.  
+        <h2>     MVC Structure</h2>
+        <u><strong>Models(Data Model with MySQL CRUD)</strong></u>
+        /app_server/models/
+        1. album.js         (model of album) [MySQL]
+        2. artist.js        (model of artist) [MySQL]
+        3. connection.js    (connection pool) [MySQL]
+        4. order.js         (model of order) [MySQL]
+        5. song.js          (model of song) [MySQL]
+        6. user.js          (model of user) [MySQL]
+        ... 
+        <u><strong>Views(ejs)</strong></u>
+        /app_server/views/
+        1. components/modal_create_album.ejs    (modal for creating album)  
+        2. components/modal_create_artist.ejs   (modal for creating artist) 
+        3. components/modal_create_order.ejs    (modal for creating order) 
+        4. components/modal_create_song.ejs     (modal for creating song) 
+        5. components/modal_edit_album.ejs      (modal for editing album)
+        6. components/modal_edit_artist.ejs     (modal for editing artist)
+        7. components/modal_edit_song.ejs       (modal for editing song)
+        8. components/modal_sign.ejs            (modal for signup and signin)
+        9. components/navbar.ejs                (navigation bar)    
+        10. error.ejs                           (content of unexpected error)
+        11. page_error.ejs                      (content of expected error)
+        12. page_home.ejs                       (content of home page)
+        13. page_manage.ejs                     (content of manage page)
+        14. page_search.ejs                     (content of search page)
+        15. page_statistic.ejs                  (content of statistic page)
+        16. template.ejs                        (template of all pages)
+        ...
+        <u><strong>Controllers(page control and RESTful api)</strong></u>
+        /app_server/controllers/
+        <strong>[Pages]</strong>
+        1. <span>/index.js</span> [session tracking] [MySQL]
+        [get]/                                          <b>[server side template] [server side include]</b>
+        [get]/history                                   <b>[server side template] [server side include]</b>
+        [get]/statistic                                 <b>[server side template] [server side include]</b>
+        [get]/manage                                    <b>[server side template] [server side include]</b>
+        [get]^/search/:option(song|album|artist)/:key   <b>[server side template] [server side include]</b>
+        
+        2. <span>/api_manage.js</span>                   <span><b>[RESTful] [session tracking] [MySQL]</b></span>
+        [post]/api/manage/create/artist     <b>[body query string] [file upload]</b>
+        [post]/api/manage/edit/artist       <b>[body query string] [file upload]</b>
+        [get]/api/manage/search/artist      <b>[URL query string] </b>
+        [get]/api/manage/delete/artist      <b>[URL query string]  </b>
+        [post]/api/manage/create/album      <b>[body query string] [file upload]</b>
+        [post]/api/manage/edit/album        <b>[body query string] [file upload]</b>
+        [get]/api/manage/get/album          <b>[URL query string] </b>
+        [get]/api/manage/delete/album       <b>[URL query string] </b>
+        [post]/api/manage/create/song       <b>[body query string] [file upload]</b>
+        [post]/api/manage/edit/song         <b>[body query string] [file upload]</b>
+        [get]/api/manage/delete/song        <b>[URL query string]</b>
+        [get]/api/manage/get/song           <b>[URL query string]</b>
+        3. <span>/api_order.js</span>                    <span><b>[RESTful] [session tracking] [MySQL]</b></span>
+        [get]/api/order/song                <b>[URL query string] </b>
+        [get]/api/order/album               <b>[URL query string]</b>
+        [get]/api/order/refund              <b>[URL query string] </b>
+        [get]/api/order/cancel/refund       <b>[URL query string] </b>
+        4. <span>/api_user.js</span>                     <span><b>[RESTful] [session tracking] [MySQL]</b></span>
+        [post]/api/user/signup              <b>[body query string] </b>
+        [post]/api/user/signin              <b>[body query string] </b>
+        [post]/api/user/signout             <b>[body query string] </b>
+        ...
+        <u><strong>Static</strong></u>
+        [static]/*
+        [static]/source/complete/*      <span>(protected by Middlewares "auth.js")</span>
+        [static]/source/preview/*       (source of preview version audio file)
+        [static]/source/album_cover/*   (source of album cover)
+        [static]/source/artist_icon/*   (source of artist icon)
+        ...
+        <u><strong>Database Design</strong></u>
+        1. 4280db.sql       (sql file for importing MySQL Database)
+        ...
+        <u><strong>Middlewares</strong></u>
+        /app_server/middlewares
+        1. auth.js          (protect routes and sources)
+        2. upload.js        (upload helper for all image and audio file uplaod action)
+        ...
+        <u><strong>Others</strong></u>
+        1. env.js           (provides variable for setting MYSQL and the absolute path of the source folder ...)
+        ...
+        <table id="container" border="1">
+            <tr>
+                <th>Usecase</th>
+                <th>Description</th>
+            </tr>
+        </table>
+    </pre>
+<!-- 
+<span ></span>
+-->
+    <script>
+        var taskList = [
+            {
+                case: 'browse albums',
+                desc: 'user can search albums, song and artist by <span >search form in navbar</span> and view the result in search page, or just browse in <span >home page</span>.'
+            },
+            {
+                case: 'listen songs',
+                desc: 'for each <span >searching/categorizing result of song</span>, user can <span >click it to play</span>.'
+            },
+            {
+                case: 'member registration',
+                desc: 'user can signup account from the <span >sign modal</span>(by clicking signin button in navbar to open it)'
+            },
+            {
+                case: 'purchase albums or songs',
+                desc: 'for each <span >searching/categorizing result of song and album</span>, user can <span >click it to buy</span>, registered member can earn loyalty points'
+            },
+            {
+                case: 'payment',
+                desc: 'user can pay for the order in <span >payment modal</span>(show after order confirm) and select whatever the payment method you want'
+            },
+            {
+                case: 'refund',
+                desc: 'user can view purchase history in <span >history page, for each record of order</span> within 3 days and not pay by loyalty points, they can <span >click it to refund.</span>'
+            },
+            {
+                case: 'enquire loyalty  points',
+                desc: 'user can view their loyalty points from the <span >profile dropdown box</span>.'
+            },
+            {
+                case: 'purchase history records',
+                desc: 'user can view their purchase history records in <span >history page</span>(link provided in profile dropdown box).'
+            },
+            {
+                case:'manage albums',
+                desc:'manager can add, remove, and change, album details, available quantity and price in the <span >manage page</span>.'
+            },
+            {
+                case: 'view statistics',
+                desc: 'manager can view statistics of sales, purchase with loyalty points, successful and rejected refund in <span >statistics page</span>.'
+            }
+
+        ];
+        var el = document.getElementById("container");
+        var html = el.innerHTML;
+        for (var i = 0; i < taskList.length; i++)
+            html += '<tr><td>' + (i + 1) + '. ' + taskList[i].case + '</td><td>' + taskList[i].desc + '</td></tr>';
+        document.getElementById("container").innerHTML = html;
+    </script>
+</body>
+
+</html>

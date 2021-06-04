@@ -1,0 +1,48 @@
+<h3>Purchased History</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#Id</th>
+            <th scope="col">Type</th>
+            <th scope="col">Name</th>
+            <th scope="col">Pay by</th>
+            <th scope="col">Price</th>
+            <th scope="col">Date</th>
+            <th scope="col">Refunded</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    <% if(purchased.length !== 0) { %>
+        <% purchased.forEach((record,index)=>{ 
+            var method = '';
+            if(record.paymentstatus === 1){
+                method = 'credit card';
+            }else{
+                method = 'Points';
+            }
+        %>
+            <tr>
+                <td><%=record.orderid %></td>
+                <td><%=purchased_items[index].type %></td>
+                <td><a href="/search/<%=purchased_items[index].type.toLowerCase() %>/<%=purchased_items[index].name %>"><%=purchased_items[index].name %></a></td>
+                <td><%=method %></td>
+                <td><%=purchased_items[index].price %></td>
+                <td><%=new Date(record.puchasedate).toISOString().slice(0, 19).replace('T', ' '); %></td>
+                <td><%=record.refund == '1' ? 'Yes' : 'No'; %></td>
+                <% if(record.refund == '1') { %>
+                <td><button class="btn btn-link btn-sm" onclick="order_cancel_refund('<%=record.orderid %>')">Cancel Refund</button></td>
+                <% }else{ %>
+                <td><button class="btn btn-link btn-sm" onclick="order_refund('<%=record.orderid %>')">Refund</button></td>
+                <% } %>
+                
+            </tr>
+        <% }); %>
+    <% } else { %>
+        <tr>
+            <td colspan="6">No purchased history.</td>
+        </tr>
+    <% } %>
+    </tbody>
+
+</table>
